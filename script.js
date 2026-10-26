@@ -5,25 +5,92 @@ var qa=function(s){return Array.prototype.slice.call(document.querySelectorAll(s
 var RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 function safe(f){try{f()}catch(e){if(window.console)console.warn('suraj:',e)}}
 
-/* ---------- Smooth in-page scrolling ---------- */
+/* ---------- Smooth in-page scrolling + scroll progress ---------- */
 safe(function(){
   var links=qa('a[href^="#"]');
-  if(!links.length)return;
+  var header=q('.site-header');
+  var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  var activeAnimation=0;
+
+  function scrollTarget(target){
+    var headerHeight=header ? header.getBoundingClientRect().height : 0;
+    var destination=window.scrollY+target.getBoundingClientRect().top-headerHeight-18;
+    var maxScroll=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+    destination=Math.max(0,Math.min(maxScroll,destination));
+
+    if(reduceMotion.matches){
+      window.scrollTo(0,destination);
+      return;
+    }
+
+    if(activeAnimation)cancelAnimationFrame(activeAnimation);
+    var startY=window.scrollY;
+    var distance=destination-startY;
+    if(Math.abs(distance)<2){window.scrollTo(0,destination);return;}
+
+    /* Longer jumps get a little more time, with a firm limit to keep navigation snappy. */
+    var duration=Math.min(1050,Math.max(480,Math.abs(distance)*0.48));
+    var startedAt=0;
+    function ease(t){return t<.5?16*t*t*t*t*t:1-Math.pow(-2*t+2,5)/2;}
+    function frame(now){
+      if(!startedAt)startedAt=now;
+      var progress=Math.min(1,(now-startedAt)/duration);
+      window.scrollTo(0,startY+distance*ease(progress));
+      if(progress<1)activeAnimation=requestAnimationFrame(frame);
+      else activeAnimation=0;
+    }
+    activeAnimation=requestAnimationFrame(frame);
+  }
+
+  function cancelScroll(){
+    if(activeAnimation){
+      cancelAnimationFrame(activeAnimation);
+      activeAnimation=0;
+    }
+  }
+  ['wheel','touchstart','pointerdown'].forEach(function(type){
+    addEventListener(type,cancelScroll,{passive:true});
+  });
+  addEventListener('keydown',function(e){
+    if(/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(e.key))cancelScroll();
+  });
+
   links.forEach(function(link){
     link.addEventListener('click',function(e){
+      if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
       var href=this.getAttribute('href');
-      if(!href||href==='#') return;
-      var target=document.getElementById(href.slice(1));
+      if(!href||href==='#')return;
+      var target=document.getElementById(decodeURIComponent(href.slice(1)));
       if(!target)return;
       e.preventDefault();
-      target.scrollIntoView({behavior: RM ? 'auto' : 'smooth', block:'start'});
-      if(window.history && window.history.pushState){
+      cancelScroll();
+      scrollTarget(target);
+      if(window.history&&window.history.pushState&&window.location.hash!==href){
         history.pushState(null,'',href);
       }
     });
   });
-});
 
+  /* Lightweight reading-progress indicator; it does not capture pointer input. */
+  var progress=document.createElement('div');
+  progress.className='scroll-progress';
+  progress.setAttribute('aria-hidden','true');
+  document.body.appendChild(progress);
+  var ticking=false;
+  function updateProgress(){
+    ticking=false;
+    var max=document.documentElement.scrollHeight-window.innerHeight;
+    var amount=max>0?Math.max(0,Math.min(1,window.scrollY/max)):0;
+    progress.style.transform='scaleX('+amount+')';
+  }
+  function queueProgress(){
+    if(!ticking){ticking=true;requestAnimationFrame(updateProgress);}
+  }
+  addEventListener('scroll',queueProgress,{passive:true});
+  addEventListener('resize',queueProgress,{passive:true});
+  updateProgress();
+});
+ 
 /* ---------- FX helpers (lightweight, no libs) ---------- */
 var fx=q('#fx');
 function pop(x,y,sak){
