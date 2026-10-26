@@ -14,9 +14,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230b1424'/%3E%3Ctext x='50' y='72' font-size='66' font-family='monospace' font-weight='bold' fill='%23e9b84c' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,13 +33,10 @@
 
 <main>
 <section id="top" class="hero section">
-  <canvas id="fss" aria-hidden="true"></canvas>
-  <div class="petals" aria-hidden="true"></div>
-
   <div class="hero-copy">
-    <span class="status-pill"><span class="status-dot" aria-hidden="true"></span>Papa duty &middot; always on</span>
-    <h1 id="name" aria-label="I AM SURAJ">I AM SURAJ</h1>
-    <p class="nameplate">(Rishab ka papa)</p>
+    <span class="eyebrow hero-eyebrow">RISHAB KA PAPA</span>
+    <h1 id="name" aria-label="Suraj">Suraj</h1>
+    <p class="nameplate">A little corner of our story.</p>
     <p class="tagline">Full-time papa. Part-time hero in Rishab’s story.</p>
     <div class="actions">
       <a class="btn btn-gold" href="#about">Meet me</a>
@@ -49,78 +44,68 @@
     </div>
   </div>
 
-  <div class="hero-card">
-    <span class="frame-tag tl">Papa mode</span>
-    <span class="frame-tag br">Rishab approved</span>
-    <span class="corner c1" aria-hidden="true"></span>
-    <span class="corner c2" aria-hidden="true"></span>
-    <img id="photo" src="assets/suraj.jpg" alt="Suraj, Rishab ka papa" width="700" height="864">
-  </div>
+  <figure class="hero-card">
+    <img id="photo" src="assets/suraj.jpg" alt="Suraj, Rishab ka papa" width="700" height="864" fetchpriority="high">
+    <figcaption>Suraj <span>·</span> Rishab ka papa</figcaption>
+  </figure>
 </section>
-
-<div class="marquee" aria-hidden="true">
-  <span>Rishab ka papa &#10022; Rishab ka papa &#10022; Rishab ka papa &#10022; Rishab ka papa &#10022; Rishab ka papa &#10022;</span>
-</div>
 
 <section id="about" class="about section">
   <span class="eyebrow">01 &mdash; About</span>
-  <h2 class="section-title reveal-up">Namaste ME. Suraj.</h2>
+  <h2 class="section-title reveal-up">The little things matter.</h2>
   <div class="about-grid">
     <div class="about-box reveal-up">
       <p>I’m Suraj, a proud papa to Rishab. I’m here for the cricket games, the silly jokes, and all the little moments that make family special. <strong>Rishab’s papa</strong>, always. :3</p>
-      <div id="sig" role="img" aria-label="Suraj signature underline"></div>
+      <p class="about-note">The small moments become the big memories.</p>
     </div>
-    <div class="stat-list">
-      <div class="stat reveal-up"><b data-n="1">0</b><span>son who runs the house</span></div>
-      <div class="stat reveal-up"><b data-n="24">0</b><span>hours a day on papa duty</span></div>
-      <div class="stat reveal-up"><b data-n="100">0</b><span>percent proud, every day</span></div>
+    <div class="about-points">
+      <div class="about-point reveal-up"><span>01</span><p>Cricket games</p></div>
+      <div class="about-point reveal-up"><span>02</span><p>Silly jokes</p></div>
+      <div class="about-point reveal-up"><span>03</span><p>Little moments</p></div>
     </div>
   </div>
 </section>
 
 <section id="rules" class="rules section">
   <span class="eyebrow">02 &mdash; Papa rules</span>
-  <h2 class="section-title pink reveal-up">Four things I live by</h2>
+  <h2 class="section-title reveal-up">Four things I live by.</h2>
   <p class="section-subtitle reveal-up">Tap a rule to open it.</p>
   <div id="rules-root"></div>
 </section>
 
 <section id="story" class="story section">
-  <span class="eyebrow">03 &mdash; The story so far</span>
-  <h2 class="section-title reveal-up">Chapters</h2>
-  <p class="section-subtitle reveal-up">Use the arrows or swipe through the chapters.</p>
-  <div class="reveal" id="deck">
-    <div class="slides">
-      <section>
-        <span class="chapter-tag">Chapter one</span>
-        <h3>I became Papa</h3>
-        <p>Nothing was ever the same, and nothing was ever better.</p>
-      </section>
-      <section>
-        <span class="chapter-tag">Chapter two</span>
-        <h3>Listen more</h3>
-        <p>I learned that a good dad listens more than he talks.</p>
-      </section>
-      <section>
-        <span class="chapter-tag">Chapter three</span>
-        <h3>The hero line</h3>
-        <p>Put on the armour, stood tall, and Rishab said, &ldquo;Papa, you look like a hero.&rdquo;</p>
-      </section>
-      <section>
-        <span class="chapter-tag">Next chapter</span>
-        <h3>Still being written</h3>
-        <p>Rishab holds the pen.</p>
-      </section>
-    </div>
-    <span class="deck-hint">SWIPE OR USE ARROWS</span>
+  <span class="eyebrow">03 / OUR STORY</span>
+  <h2 class="section-title reveal-up">Still being written.</h2>
+  <p class="section-subtitle reveal-up">A few chapters, with plenty more to come.</p>
+  <div class="chapter-grid" id="deck">
+    <article class="chapter-card reveal-up">
+      <span class="chapter-number">01</span>
+      <h3>I became Papa</h3>
+      <p>Nothing was ever the same, and nothing was ever better.</p>
+    </article>
+    <article class="chapter-card reveal-up">
+      <span class="chapter-number">02</span>
+      <h3>Listen more</h3>
+      <p>I learned that a good dad listens more than he talks.</p>
+    </article>
+    <article class="chapter-card reveal-up">
+      <span class="chapter-number">03</span>
+      <h3>The hero line</h3>
+      <p>Put on the armour, stood tall, and Rishab said, &ldquo;Papa, you look like a hero.&rdquo;</p>
+    </article>
+    <article class="chapter-card chapter-next reveal-up">
+      <span class="chapter-number">04 / NEXT</span>
+      <h3>Still being written</h3>
+      <p>Rishab holds the pen.</p>
+    </article>
   </div>
 </section>
 
 <section id="hi" class="hi section">
   <span class="eyebrow">04 &mdash; Say hi</span>
   <div id="heart" role="button" tabindex="0" aria-label="Send love to Suraj" title="Send love to Suraj"></div>
-  <h2 class="section-title pink">Say hi to Suraj</h2>
-  <p class="section-subtitle">Tap the heart or the button. Rishab&rsquo;s papa is listening.</p>
+  <h2 class="section-title reveal-up">Leave a little love.</h2>
+  <p class="section-subtitle">Tap the heart to send a little kindness Suraj’s way.</p>
   <div class="hi-actions">
     <button class="btn btn-sak hi-btn" id="love" type="button">Send some love</button>
     <button class="btn ghost share-btn" id="share" type="button">Share this page</button>
@@ -134,20 +119,6 @@
   <span class="footer-right">Made with love for Rishab&rsquo;s papa &copy; 2026</span>
 </footer>
 
-<audio id="siteMusic" loop preload="none"></audio>
-<button class="music-toggle is-off is-waiting" id="musicToggle" type="button" disabled aria-pressed="false" aria-label="Music unavailable" title="Music unavailable">
-  <svg class="icon-on" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
-    <path class="wave wave-1" d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/>
-    <path class="wave wave-2" d="M18.3 7a7 7 0 0 1 0 10"/>
-  </svg>
-  <svg class="icon-off" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor"/>
-    <path d="M16 9.5l5 5M21 9.5l-5 5"/>
-  </svg>
-</button>
-
-<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js" defer></script>
 <script src="script.js" defer></script>
 </body>
 </html>
