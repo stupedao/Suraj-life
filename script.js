@@ -5,6 +5,25 @@ var qa=function(s){return Array.prototype.slice.call(document.querySelectorAll(s
 var RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 function safe(f){try{f()}catch(e){if(window.console)console.warn('suraj:',e)}}
 
+/* ---------- Smooth in-page scrolling ---------- */
+safe(function(){
+  var links=qa('a[href^="#"]');
+  if(!links.length)return;
+  links.forEach(function(link){
+    link.addEventListener('click',function(e){
+      var href=this.getAttribute('href');
+      if(!href||href===' #') return;
+      var target=document.querySelector(href);
+      if(!target)return;
+      e.preventDefault();
+      target.scrollIntoView({behavior: RM ? 'auto' : 'smooth', block:'start'});
+      if(window.history && window.history.pushState){
+        history.pushState(null,'',href);
+      }
+    });
+  });
+});
+
 /* ---------- FX helpers (lightweight, no libs) ---------- */
 var fx=q('#fx');
 function pop(x,y,sak){
@@ -13,7 +32,7 @@ function pop(x,y,sak){
     var d=document.createElement('span');
     var ang=(Math.PI*2*i)/14+Math.random()*0.4;
     var dist=42+Math.random()*70;
-    d.style.cssText='position:absolute;left:'+x+'px;top:'+y+'px;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+(sak?'#f4b8c8':(i%3?'#e9b84c':'#7ec9dc'))+';border-radius:50%;will-change:transform,opacity';
+    d.style.cssText='position:absolute;left:'+x+'px;top:'+y+'px;width:'+(5+Math.random()*6)+'px;height:'+(5+Math.random()*6)+'px;background:'+(sak?'#f4b8c8':(i%3?'#e9b84c':'#7ec9dc'))+';border-radius:50%;pointer-events:none;box-shadow:0 0 10px rgba(255,255,255,.15)';
     fx.appendChild(d);
     var tx=Math.cos(ang)*dist, ty=Math.sin(ang)*dist;
     d.animate(
@@ -197,9 +216,9 @@ safe(function(){
     card.setAttribute('role','button');
     card.setAttribute('tabindex','0');
     card.setAttribute('aria-expanded','false');
-    card.innerHTML='<span class="rule-num">RULE 0'+(i+1)+'</span>'+
-                   '<span class="rule-plus" aria-hidden="true">+</span>'+
-                   '<h3>'+r[0]+'</h3>'+
+    card.innerHTML='<span class="rule-num">RULE 0'+(i+1)+'</span>'+ 
+                   '<span class="rule-plus" aria-hidden="true">+</span>'+ 
+                   '<h3>'+r[0]+'</h3>'+ 
                    '<p class="rule-body" hidden>'+r[1]+'</p>';
     var plus=card.querySelector('.rule-plus'),body=card.querySelector('.rule-body');
     function settleClosed(el){
@@ -210,7 +229,7 @@ safe(function(){
       card.classList.toggle('open',isOpen);
       card.setAttribute('aria-expanded',String(isOpen));
       plus.textContent=isOpen?'\u2013':'+';
-      if(!body.animate||RM){                 /* no Web Animations or motion reduced: instant, always consistent */
+      if(!body.animate||RM){
         if(isOpen){body.hidden=false;body.style.height='';body.style.overflow='';body.style.opacity='';}
         else settleClosed(body);
         return;
@@ -332,11 +351,11 @@ safe(function(){
       reveal=new Reveal(deck,{
         embedded:true,hash:false,controls:true,progress:true,
         width:960,height:420,margin:.06,transition:'slide',
-        keyboard:false,          /* we handle arrows ourselves, below */
+        keyboard:false,
         keyboardCondition:null,
-        touch:false,             /* we implement swipe ourselves, see hookSwipe() */
-        view:'slide',            /* pin slide view; on phones Reveal would otherwise fall back to scroll view */
-        scrollActivationWidth:0, /* 0 disables the auto-switch to scroll view entirely */
+        touch:false,
+        view:'slide',
+        scrollActivationWidth:0,
         loop:true,slideNumber:false,history:false,
         respondToHashChanges:false
       });
@@ -346,7 +365,7 @@ safe(function(){
   }
   var wired=false;
   function ready(){
-    if(wired||!reveal)return;      /* wire exactly once, even if both the poll and 'load' fire */
+    if(wired||!reveal)return;
     wired=true;
     hookKeys();
     hookSwipe();
@@ -354,10 +373,6 @@ safe(function(){
     if(deck)deck.classList.add('deck-ready');
   }
 
-  /* Reveal measures the deck once at init. If fonts, the responsive viewport,
-     or the surrounding layout settle afterwards, its internal scale/dimensions
-     can go stale (slides render tiny or navigation appears dead). Re-sync on
-     resize and after fonts load. */
   function layoutFixups(){
     if(!reveal)return;
     var lastW=0,lastH=0,raf=null;
@@ -372,7 +387,6 @@ safe(function(){
     addEventListener('resize',function(){ if(!raf)raf=requestAnimationFrame(resync) },{passive:true});
     addEventListener('orientationchange',function(){ setTimeout(resync,220) });
     if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(resync) }
-    /* one extra pass for the responsive breakpoint switch */
     setTimeout(resync,320);
     setTimeout(resync,900);
     resync();
@@ -389,8 +403,6 @@ safe(function(){
     ready();
   }
 
-  /* Arrow keys drive the deck only while the story section is on screen,
-     so we never steal keyboard control from the rest of the page. */
   function hookKeys(){
     if(!reveal)return;
     var story=q('#story'),active=false;
@@ -414,9 +426,6 @@ safe(function(){
     });
   }
 
-  /* Reliable swipe: we own the gesture so it works on every device,
-     regardless of Reveal's internal velocity heuristics.
-     Capture phase, so Reveal's own touch handling can't swallow the event first. */
   function hookSwipe(){
     if(!reveal)return;
     var sx=0,sy=0,tracking=false;
@@ -428,10 +437,9 @@ safe(function(){
       if(!tracking)return;tracking=false;
       var t=e.changedTouches&&e.changedTouches[0];if(!t)return;
       var dx=t.clientX-sx,dy=t.clientY-sy;
-      if(Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.4)return;  /* require a clear horizontal swipe */
+      if(Math.abs(dx)<45||Math.abs(dx)<Math.abs(dy)*1.4)return;
       if(dx<0)reveal.next();else reveal.prev();
     },{passive:true,capture:true});
-    /* touchcancel: forget the gesture so a stray cancel can't advance the deck */
     deck.addEventListener('touchcancel',function(){tracking=false},{passive:true,capture:true});
   }
 });
@@ -440,8 +448,6 @@ safe(function(){
 safe(function(){
   var audio=q('#siteMusic'),btn=q('#musicToggle');
   if(!audio||!btn)return;
-  /* Drop your own file next to this page and set src="song.mp3" to enable audio.
-     Until a source exists the button stays a soft, non-blocking nudge. */
   var src=audio.getAttribute('data-src');
   if(src)audio.src=src;
   var hasSrc=!!(audio.currentSrc||audio.src);
@@ -454,7 +460,6 @@ safe(function(){
   }
   btn.addEventListener('click',function(){
     if(!hasSrc){
-      /* no audio file yet — gentle visual feedback only */
       btn.animate([{transform:'rotate(0)'},{transform:'rotate(-9deg)'},{transform:'rotate(9deg)'},{transform:'rotate(0)'}],{duration:420});
       return;
     }
