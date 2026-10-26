@@ -24,11 +24,6 @@
    --ease:cubic-bezier(.2,.7,.2,1);
 }
 *{box-sizing:border-box}
-html{
-  scroll-behavior:smooth;
-  scroll-padding-top:96px;
-  scroll-snap-type:y proximity;
-}
 body{
    margin:0;
    background:var(--page);
