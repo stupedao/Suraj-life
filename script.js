@@ -12,8 +12,8 @@ safe(function(){
   links.forEach(function(link){
     link.addEventListener('click',function(e){
       var href=this.getAttribute('href');
-      if(!href||href===' #') return;
-      var target=document.querySelector(href);
+      if(!href||href==='#') return;
+      var target=document.getElementById(href.slice(1));
       if(!target)return;
       e.preventDefault();
       target.scrollIntoView({behavior: RM ? 'auto' : 'smooth', block:'start'});
@@ -196,7 +196,7 @@ safe(function(){
   var card=q('.hero-card');if(!card)return;
   addEventListener('pointermove',function(e){
     var x=e.clientX/window.innerWidth-.5,y=e.clientY/window.innerHeight-.5;
-    card.style.transform='translate('+(x*10).toFixed(2)+'px,'+(y*10).toFixed(2)+'px)';
+    card.style.transform='rotate(2deg) translate('+(x*8).toFixed(2)+'px,'+(y*8).toFixed(2)+'px)';
   },{passive:true});
 });
 
@@ -335,10 +335,54 @@ safe(function(){
     if(msg)msg.textContent=msgs[mi++%msgs.length];
   }
   heartHost.addEventListener('click',send);
+  heartHost.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();send(e)}
+  });
   if(btn)btn.addEventListener('click',send);
-  var burst=q('#burst'),photo=q('#photo');
+
+  /* Share works with the native share sheet where available and falls back to copying. */
+  var share=q('#share');
+  function showShareMessage(text){if(msg)msg.textContent=text}
+  function copyLink(url){
+    if(navigator.clipboard&&navigator.clipboard.writeText&&window.isSecureContext){
+      navigator.clipboard.writeText(url).then(function(){
+        showShareMessage('Page link copied. Send it to someone who knows Suraj!');
+      }).catch(function(){fallbackCopy(url)});
+      return;
+    }
+    fallbackCopy(url);
+  }
+  function fallbackCopy(url){
+    var field=document.createElement('textarea');
+    field.value=url;
+    field.setAttribute('readonly','');
+    field.style.position='fixed';
+    field.style.opacity='0';
+    field.style.pointerEvents='none';
+    document.body.appendChild(field);
+    field.select();
+    var copied=false;
+    try{copied=document.execCommand('copy')}catch(e){}
+    field.remove();
+    showShareMessage(copied?'Page link copied. Send it to someone who knows Suraj!':'Copy this link to share: '+url);
+  }
+  if(share)share.addEventListener('click',function(){
+    var url=window.location.href;
+    var payload={title:document.title,text:'Meet Suraj — Rishab ka papa.',url:url};
+    if(navigator.share){
+      navigator.share(payload).then(function(){
+        showShareMessage('Thanks for sharing Suraj’s page!');
+      }).catch(function(error){
+        if(error&&error.name==='AbortError')return;
+        copyLink(url);
+      });
+    }else{
+      copyLink(url);
+    }
+  });
+
+  var burst=q('#burst');
   if(burst)burst.addEventListener('click',function(e){pop(e.clientX,e.clientY)});
-  if(photo)photo.addEventListener('click',function(e){pop(e.clientX,e.clientY)});
 });
 
 /* ---------- Reveal.js story deck (loads deferred, so wait for it) ---------- */
