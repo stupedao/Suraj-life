@@ -429,9 +429,13 @@ safe(function(){
 safe(function(){
   var audio=q('#siteMusic'),btn=q('#musicToggle');
   if(!audio||!btn)return;
-  var src=audio.getAttribute('data-src');
+  var src=audio.getAttribute('data-src')||audio.getAttribute('src');
   if(src)audio.src=src;
-  var hasSrc=!!(audio.currentSrc||audio.src);
+  var hasSrc=!!src;
+  if(!hasSrc){
+    btn.hidden=true;
+    return;
+  }
   function setOn(on){
     btn.classList.toggle('is-off',!on);
     btn.classList.remove('is-waiting');
