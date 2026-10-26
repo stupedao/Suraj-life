@@ -82,7 +82,7 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:20px;pa
 .story .section-subtitle{margin-bottom:24px}
 #deck.reveal{
   width:100%;
-  height:auto;
+  height:420px;
   min-height:350px;
   font-size:1rem;
   line-height:1.65;
@@ -95,7 +95,14 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:20px;pa
 #deck .slides h3{font-size:clamp(2rem,5vw,4rem);line-height:1.02}
 #deck .controls{transform:scale(.9);transform-origin:bottom right}
 #deck .progress{height:4px}
-#deck .deck-hint{pointer-events:none}
+#deck .deck-hint{
+  position:absolute;
+  z-index:5;
+  left:clamp(22px,5vw,54px);
+  bottom:17px;
+  margin:0;
+  pointer-events:none;
+}
 #deck:not(.deck-ready) .slides{
   position:relative;
   inset:auto;
@@ -140,7 +147,7 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:20px;pa
 @media(max-width:620px){
   .hero-card{width:min(78%,320px)}
   .stat:hover{transform:none}
-  #deck.reveal{min-height:320px}
+  #deck.reveal{height:370px;min-height:320px}
   #deck .controls{transform:scale(.78)}
   #deck .slides h3{font-size:clamp(2rem,10vw,2.8rem)}
   .hi-actions{gap:10px}
