@@ -5,25 +5,6 @@ var qa=function(s){return Array.prototype.slice.call(document.querySelectorAll(s
 var RM=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 function safe(f){try{f()}catch(e){if(window.console)console.warn('suraj:',e)}}
 
-/* ---------- Smooth in-page scrolling ---------- */
-safe(function(){
-  var links=qa('a[href^="#"]');
-  if(!links.length)return;
-  links.forEach(function(link){
-    link.addEventListener('click',function(e){
-      var href=this.getAttribute('href');
-      if(!href||href===' #') return;
-      var target=document.querySelector(href);
-      if(!target)return;
-      e.preventDefault();
-      target.scrollIntoView({behavior: RM ? 'auto' : 'smooth', block:'start'});
-      if(window.history && window.history.pushState){
-        history.pushState(null,'',href);
-      }
-    });
-  });
-});
-
 /* ---------- FX helpers (lightweight, no libs) ---------- */
 var fx=q('#fx');
 function pop(x,y,sak){
