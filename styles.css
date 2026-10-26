@@ -169,3 +169,24 @@ footer{display:flex;align-items:center;justify-content:space-between;gap:20px;pa
   .site-header nav a::after{transition:none}
   .stat:hover,.rule:hover,.hero-card:hover{transform:none}
 }
+
+
+/* ---------- Scroll motion polish ---------- */
+html{scroll-behavior:auto;scroll-snap-type:y proximity}
+.scroll-progress{
+  position:fixed;
+  z-index:100;
+  top:env(safe-area-inset-top,0px);
+  left:0;
+  width:100%;
+  height:3px;
+  background:linear-gradient(90deg,var(--gold),var(--sak),var(--ocean));
+  transform:scaleX(0);
+  transform-origin:left center;
+  pointer-events:none;
+  will-change:transform;
+  box-shadow:0 0 12px rgba(233,184,76,.22);
+}
+@media(prefers-reduced-motion:reduce){
+  .scroll-progress{transition:none}
+}
